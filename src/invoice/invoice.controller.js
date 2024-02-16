@@ -1,4 +1,4 @@
-import Buy from './buy.model.js'
+import Invoice from './invoice.model.js'
 
 export const test = (req, res) => {
     console.log('Test is running')

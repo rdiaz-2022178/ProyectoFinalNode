@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose"
 
-const buySchema = Schema({
-    user: {
+const invoiceSchema = Schema({
+    buy: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'buy',
         require: true
     },
     product: {
@@ -11,16 +11,24 @@ const buySchema = Schema({
         ref: 'product',
         require: true
     },
-    lot: {
+    totalPrice: {
         type: Number,
         required: true
     },
-    total: {
-        type: Number,
+    serialNumber: {
+        type: String,
+        require: true
+    },
+    date: {
+        type: Date,
+        require: true
+    },
+    time:{
+        type: Date,
         require: true
     }
 }, {
     versionKey: false
 })
 
-export default model('buy', buySchema)
+export default model('invoice', invoiceSchema)
