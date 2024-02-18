@@ -1,5 +1,6 @@
 import User from '../user/user.model.js'
 import { encrypt, comparePassword, checkUpdate, checkUpdateUser } from '../../utils/validation.js'
+import { generateJwt } from '../../utils/jwt.js'
 
 
 export const test = (req, res) => {
@@ -35,12 +36,14 @@ export const login = async (req, res) => {
         //Verifico que la contraseña coincida
         if (user && await comparePassword(password, user.password)) {
             let loggedUser = {
+                uid: user._id,
                 username: user.username,
                 name: user.name,
                 role: user.role
             }
+            let token = await generateJwt(loggedUser)
             //Respondo al usuario
-            return res.send({ message: `Welcome ${loggedUser.name}`, loggedUser })
+            return res.send({ message: `Welcome ${loggedUser.name}`, loggedUser, token })
         }
         return res.status(404).send({ message: 'Invalid credentials' })
     } catch (err) {

@@ -26,9 +26,7 @@ export const checkUpdate = (data, id) => {
             data.description == '' ||
             data.password ||
             data.password == '' ||
-            data.role ||
-            data.role == '' ||
-            data.role == 'CLIENT'
+            data.role == '' 
 
         ) {
             return false
