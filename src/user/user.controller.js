@@ -8,7 +8,7 @@ export const test = (req, res) => {
     res.send({ message: 'test good' })
 }
 
-export const add = async (req, res) => {
+export const addClient = async (req, res) => {
     try {
         //Capturar el formulario (body)
         let data = req.body
@@ -26,6 +26,24 @@ export const add = async (req, res) => {
         return res.status(500).send({ message: 'Error registering user', err: err })
     }
 }
+export const addAdmin = async (req, res) => {
+    try {
+        //Capturar el formulario (body)
+        let data = req.body
+        //Encriptar la contraseña
+        data.password = await encrypt(data.password)
+        //Asignar el rol por defecto
+        data.role = 'ADMIN'
+        //Guardar la información en la BD
+        let user = new User(data)
+        await user.save() //Guardar en la BD
+        //Responder al usuario
+        return res.send({ message: `Registered successfully, can be logged with username ${user.username}` })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({ message: 'Error registering user', err: err })
+    }
+}
 
 export const login = async (req, res) => {
     try {
@@ -33,6 +51,7 @@ export const login = async (req, res) => {
         let { username, password } = req.body
         //Validar que el usuario exista
         let user = await User.findOne({ username }) //buscar un solo registro
+        
         //Verifico que la contraseña coincida
         if (user && await comparePassword(password, user.password)) {
             let loggedUser = {
@@ -63,7 +82,6 @@ export const update = async (req, res) => { //Datos generales (No password)
         if (!update) return res.status(400).send({ message: 'Have submitted some data that cannot be updated or missing data' })
         //Validar si tiene permisos (tokenización) X Hoy No lo vemos X
         //Actualizar (BD)
-        if (id.role == 'CLIENT') return res.status(401).send({ message: 'You do not have permissions to perform this action        ' })
         let updatedUser = await User.findOneAndUpdate(
             { _id: id }, //ObjectsId <- hexadecimales (Hora sys, Version Mongo, Llave privada...)
             data, //Los datos que se van a actualizar

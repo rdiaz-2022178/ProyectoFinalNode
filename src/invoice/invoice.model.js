@@ -22,10 +22,6 @@ const invoiceSchema = Schema({
     date: {
         type: Date,
         require: true
-    },
-    time:{
-        type: Date,
-        require: true
     }
 }, {
     versionKey: false
